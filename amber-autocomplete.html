@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Amber's Autocomplete Widget</title>
+    <link rel="stylesheet" href="amber-autocomplete-styles.css">
+</head>
+<body>
+	<div id="auto-complete-widget" role="application">
+	<form autocomplete="off">
+		<label for="user-input">Try out Amber's autocomplete widget:</label><br />
+		<input role="combobox" id="user-input" autocomplete="off" type="text" tabindex="0" aria-autocomplete="none">
+		<div role="region" id="accessible-div" aria-live="assertive" aria-relevant="additions" tabindex="-1"></div>
+	</form>
+	</div>
+	
+	<script type="text/javascript" src="jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="underscore-min.js"></script>
+	<script type="text/javascript" src="backbone-min.js"></script>
+	<script type="text/javascript" src="amber-autocomplete.js"></script>
+	<script type="text/javascript">
+
+		//words for the autocomplete
+		var tags =
+		[
+		  "ActionScript",
+		  "AppleScript",
+		  "Asp",
+		  "BASIC",
+		  "C",
+		  "C++",
+		  "Clojure",
+		  "COBOL",
+		  "ColdFusion",
+		  "Erlang",
+		  "Fortran",
+		  "Groovy",
+		  "Haskell",
+		  "Java",
+		  "JavaScript",
+		  "Lisp",
+		  "Perl",
+		  "PHP",
+		  "Python",
+		  "Ruby",
+		  "Scala",
+		  "Scheme"
+		];
+
+		//plugin model
+		var Plugin = Backbone.Model.extend({
+			word: ''
+		 });
+
+		//plugin collection
+		var PluginCollection = Backbone.Collection.extend({
+			model: Plugin
+		});
+		
+		//makes models from the "tags" array
+		var models = $.map(tags, function (value, i) {
+			var newMod = new Plugin({
+				'word': value
+			})
+			return newMod;
+		});
+		
+		//create a collection with the models
+		var plugins = new PluginCollection(models);
+
+		//make a new view with the following options
+		new AutoCompleteView({
+			input: $("#user-input"), // user input field
+			model: plugins, //collection
+			accessibilityOn: false, //enables hidden div for screen readers (reads out currently highlighted word)
+			accessibleID: $("#accessible-div") //name of hidden div for screen readers
+		}).render();
+		
+		/*USER OPTIONS
+			input: user input field
+			model: collection
+			accessibilityOn: true or false, enables hidden div for screen readers (which reads out currently highlighted word)
+			accessibleID: $("#accessible-div") //hidden div for screen readers
+			className: style class
+			wait: the time to wait (milliseconds) before we start handling the input
+			minKwrdLen: minimum number of characters required
+		*/
+		
+
+	</script>
+</body>
+</html>
